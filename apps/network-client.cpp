@@ -7,7 +7,8 @@
 int main(int argc, char* argv[]) {
     sf::TcpSocket socket;
     if (socket.connect(sf::IpAddress::getLocalAddress(), 9003) != sf::Socket::Done) {
-        std::cout << "Could not connect!";
+        std::cout << "Could not connect!" << std::endl;
+        return 1;
     }
     std::cout << socket.getRemoteAddress() << ":" << socket.getRemotePort() << "(" << socket
     .getLocalPort() << ")" << std::endl;
@@ -18,6 +19,7 @@ int main(int argc, char* argv[]) {
     sf::Packet packet;
     if (socket.receive(packet) != sf::Socket::Done) {
         std::cout << "Reading error!" << std::endl;
+        return 2;
     } else {
         std::string message;
         packet >> message;
