@@ -1,9 +1,40 @@
-add_executable(cows main.cpp)
+add_executable(graphics graphics.cpp)
 
-TARGET_LINK_LIBRARIES(cows
-        cow_library
+TARGET_LINK_LIBRARIES(graphics
+        game_lib
+        utils_lib
+        network_lib
+
         -lsfml-graphics
         -lsfml-window
         -lsfml-system
         -lsfml-audio
         -lsfml-network)
+
+add_executable(network-host network-host.cpp)
+
+TARGET_LINK_LIBRARIES(network-host
+        game_lib
+        utils_lib
+        network_lib
+
+        -lsfml-graphics
+        -lsfml-window
+        -lsfml-system
+        -lsfml-audio
+        -lsfml-network
+        -lpthread)
+
+add_executable(network-client network-client.cpp)
+
+TARGET_LINK_LIBRARIES(network-client
+        game_lib
+        utils_lib
+        network_lib
+
+        -lsfml-graphics
+        -lsfml-window
+        -lsfml-system
+        -lsfml-audio
+        -lsfml-network
+        -lpthread)

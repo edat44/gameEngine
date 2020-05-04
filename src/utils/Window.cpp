@@ -2,9 +2,9 @@
 // Created by edat44 on 4/20/20.
 //
 
-#include "../include/window.h"
+#include "utils/Window.hpp"
 
-namespace cow {
+namespace utils {
     void setupWindow(sf::Window &window, unsigned int width, unsigned int height,
                      const sf::String &title, int x, int y, sf::Uint32 style = sf::Style::Default) {
         window.create(sf::VideoMode(width, height), title, style);
@@ -12,4 +12,4 @@ namespace cow {
         window.setActive(true);
         window.setVerticalSyncEnabled(true);
     }
-}
+} // namespace utils

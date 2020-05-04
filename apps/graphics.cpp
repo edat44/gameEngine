@@ -1,11 +1,16 @@
-#include <SFML/Graphics.hpp>
+#include <cassert>
+#include <cstddef>
 #include <iostream>
-#include <window.h>
+
+#include <SFML/Graphics.hpp>
+
+#include <utils/Window.hpp>
+
 
 // Starter program from https://www.sfml-dev.org/tutorials/2.5/start-linux.php
-int main() {
+int main(int argc, char* argv[]) {
     sf::RenderWindow window;
-    cow::setupWindow(window, 400, 400, "Cowgame", 50, 50, sf::Style::Close & sf::Style::Titlebar);
+    utils::setupWindow(window, 400, 400, "Game", 50, 50, sf::Style::Close & sf::Style::Titlebar);
 
 
     sf::CircleShape shape(100.f);

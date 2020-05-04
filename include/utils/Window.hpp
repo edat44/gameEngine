@@ -4,16 +4,16 @@
 
 #include <SFML/Window.hpp>
 
-#ifndef COWGAME_WINDOW_H
-#define COWGAME_WINDOW_H
+#ifndef GAME_WINDOW_H
+#define GAME_WINDOW_H
 
-namespace cow {
+namespace utils {
 
     // Setups a new window with extra parameters than the default sf::Window::create
     void setupWindow(sf::Window &window, unsigned int width, unsigned int height,
                      const sf::String &title, int x, int y, sf::Uint32 style);
 
-}
+} // namespace utils
 
 
 #endif //COWGAME_WINDOW_H
