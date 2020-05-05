@@ -5,7 +5,7 @@
 #include "utils/Window.hpp"
 
 namespace utils {
-    void setupWindow(sf::Window &window, unsigned int width, unsigned int height,
+    void SetupWindow(sf::Window &window, unsigned int width, unsigned int height,
                      const sf::String &title, int x, int y, sf::Uint32 style = sf::Style::Default) {
         window.create(sf::VideoMode(width, height), title, style);
         window.setPosition({x, y});

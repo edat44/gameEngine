@@ -5,15 +5,19 @@
 #ifndef GAME_GAME_HPP
 #define GAME_GAME_HPP
 
+#include <network/Server.hpp>
+#include <game/Engine.hpp>
 
-namespace game {
+class Game {
+public:
+    Game();
+    ~Game();
 
-    class Game {
-    public:
-        Game() noexcept;
-    };
+    void Start();
 
-} // namespace game
-
+private:
+    Engine* engine;
+    Server* server;
+};
 
 #endif //GAME_GAME_HPP

@@ -8,6 +8,6 @@ Client::Client(sf::TcpSocket* socket) {
     this->socket = std::shared_ptr<sf::TcpSocket>(socket);
 }
 
-std::shared_ptr<sf::TcpSocket> Client::getSocket() const {
+std::shared_ptr<sf::TcpSocket> Client::GetSocket() const {
     return this->socket;
 }

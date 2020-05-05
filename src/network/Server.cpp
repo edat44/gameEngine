@@ -4,8 +4,9 @@
 
 #include <network/Server.hpp>
 #include <iostream>
+#include <events/ClientConnectedEvent.hpp>
 
-Server::Server(int localPort) {
+Server::Server(int localPort, eventQueue_t events) {
     this->listener = std::make_unique<sf::TcpListener>();
     if (this->listener->listen(localPort) != sf::Socket::Done) {
         std::cout << "Could not listen!" << std::endl;
@@ -13,14 +14,17 @@ Server::Server(int localPort) {
     this->selector.add(*this->listener);
     std::cout << "Listening on " << listener->getLocalPort() << std::endl;
     this->running = false;
+    this->events = std::move(events);
 }
 
 void Server::Start() {
     this->running = true;
     this->listenThread = std::thread(&Server::Listen, this);
-    std::cout << "Thread info: " <<
-                 "id=" << this->listenThread.get_id() <<
-                 "joinable=" << this->listenThread.joinable() << std::endl;
+    this->listenThread.detach();
+}
+
+void Server::Stop() {
+    this->running = false;
 }
 
 void Server::Listen() {
@@ -35,15 +39,13 @@ void Server::Listen() {
                 if (this->listener->accept(*socket) == sf::Socket::Done) {
                     std::cout << "New connection ready!" << std::endl;
                     this->AddClient(socket);
-                    sf::Packet p;
-                    p << "Hello from the server!\n";
-                    socket->send(p);
+                    this->events->Enqueue(new ClientConnectedEvent(socket));
                 } else {
                     std::cout << "Cannot create new connection" << std::endl;
                 }
             } else {
                 for (auto it = this->clients.begin(); it != this->clients.end();) {
-                    auto socket = (*it)->getSocket();
+                    auto socket = (*it)->GetSocket();
                     if (this->selector.isReady(*socket)) {
                         std::cout << "Received new message from " << socket
                         ->getRemoteAddress() << std::endl;
@@ -69,15 +71,14 @@ void Server::Listen() {
                     }
                 }
             }
-        } else {
-            //std::cout << "Server timeout!" << std::endl;
         }
     }
+    std::cout << "Server shutting down!" << std::endl;
 }
 
 void Server::AddClient(sf::TcpSocket *socket) {
     auto client = new Client(socket);
     this->clients.push_back(client);
-    this->selector.add(*client->getSocket());
+    this->selector.add(*client->GetSocket());
     std::cout << "New client created! total size: " << this->clients.size() << std::endl;
 }

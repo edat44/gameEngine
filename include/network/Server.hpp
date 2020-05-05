@@ -11,12 +11,14 @@
 
 #include <memory>
 #include "Client.hpp"
+#include <utils/Queue.hpp>
 
 class Server {
 public:
-    explicit Server(int localPort);
+    explicit Server(int localPort, eventQueue_t events);
 
     void Start();
+    void Stop();
 
 private:
     void Listen();
@@ -27,6 +29,7 @@ private:
     std::list<Client*> clients;
     std::thread listenThread;
     bool running;
+    eventQueue_t events;
 };
 
 

@@ -15,7 +15,7 @@ public:
     Client() = delete;
     explicit Client(sf::TcpSocket* socket);
 
-    [[nodiscard]] std::shared_ptr<sf::TcpSocket> getSocket() const;
+    [[nodiscard]] std::shared_ptr<sf::TcpSocket> GetSocket() const;
 
 
 private:

@@ -34,10 +34,10 @@ TARGET_LINK_LIBRARIES(network-client
         -lpthread)
 
 add_executable(stack stack.cpp)
-
-TARGET_LINK_LIBRARIES(stack
-        game_lib)
+TARGET_LINK_LIBRARIES(stack game_lib)
 
 add_executable(queue queue.cpp)
-
 TARGET_LINK_LIBRARIES(queue game_lib)
+
+add_executable(game game.cpp)
+target_link_libraries(game game_lib -lsfml-network -lsfml-system -lpthread)

@@ -10,7 +10,7 @@
 // Starter program from https://www.sfml-dev.org/tutorials/2.5/start-linux.php
 int main(int argc, char* argv[]) {
     sf::RenderWindow window;
-    utils::setupWindow(window, 400, 400, "Game", 50, 50, sf::Style::Close & sf::Style::Titlebar);
+    utils::SetupWindow(window, 400, 400, "Game", 50, 50, sf::Style::Close & sf::Style::Titlebar);
 
 
     sf::CircleShape shape(100.f);

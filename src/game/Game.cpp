@@ -4,6 +4,20 @@
 
 #include "game/Game.hpp"
 
-namespace game {
-    Game::Game() noexcept = default;
+Game::Game() {
+    this->engine = new Engine();
+    this->server = new Server(9003, this->engine->Events());
+}
+
+
+void Game::Start() {
+    this->server->Start();
+    this->engine->Run();
+}
+
+Game::~Game() {
+    delete this->engine;
+
+    this->server->Stop();
+    delete this->server;
 }

@@ -20,15 +20,15 @@ public:
         this->data = new T[this->capacity];
     }
     ~Stack();
-    void push(const T &element);
-    std::optional<T> pop();
-    [[nodiscard]] bool empty() const;
-    void print(std::ostream& out=std::cout) const;
+    void Push(const T &element);
+    std::optional<T> Pop();
+    [[nodiscard]] bool Empty() const;
+    void Print(std::ostream& out= std::cout) const;
 
     friend std::ostream& operator<<(std::ostream &out, const Stack &s) {
         out << "size: " << s.size << ", cap: " << s.capacity << std::endl;
-        if (s.empty()) {
-            std::cout << "<empty>";
+        if (s.Empty()) {
+            std::cout << "<Empty>";
         } else {
             for (size_t i = 0; i < s.size; i++) {
                 out << s.data[i] << (i == s.size - 1 ? "" : ", ");
@@ -40,8 +40,8 @@ public:
 
 
 private:
-    int resize(size_t newCapacity);
-    void adjustCapacity();
+    int Resize(size_t newCapacity);
+    void AdjustCapacity();
 
     T* data;
     size_t size;
@@ -56,36 +56,36 @@ Stack<T>::~Stack() {
 }
 
 template <typename T>
-void Stack<T>::push(const T &element) {
+void Stack<T>::Push(const T &element) {
     assert(this->data != nullptr);
-    this->adjustCapacity();
+    this->AdjustCapacity();
     this->data[this->size++] = element;
 }
 
 template <typename T>
-std::optional<T> Stack<T>::pop() {
+std::optional<T> Stack<T>::Pop() {
     assert(this->data != nullptr);
-    if (this->empty()) {
+    if (this->Empty()) {
         return std::optional<T>();
     } else {
         T element = this->data[--this->size];
-        this->adjustCapacity();
+        this->AdjustCapacity();
         return element;
     }
 }
 
 template<typename T>
-bool Stack<T>::empty() const {
+bool Stack<T>::Empty() const {
     return this->size == 0;
 }
 
 template <typename T>
-void Stack<T>::print(std::ostream& out) const {
+void Stack<T>::Print(std::ostream& out) const {
     out << *this;
 }
 
 template <typename T>
-int Stack<T>::resize(size_t newCapacity) {
+int Stack<T>::Resize(size_t newCapacity) {
     assert(this->data != nullptr);
 
     T* newData = new T[newCapacity];
@@ -98,11 +98,11 @@ int Stack<T>::resize(size_t newCapacity) {
 }
 
 template <typename T>
-void Stack<T>::adjustCapacity() {
+void Stack<T>::AdjustCapacity() {
     if (this->size >= this->capacity) {
-        this->resize(this->size * 1.5);
+        this->Resize(this->size * 1.5);
     } else if (this->size <= this->capacity * 0.5) {
-        this->resize(std::max((int)(this->size * 0.75), MIN_CAPACITY));
+        this->Resize(std::max((int) (this->size * 0.75), MIN_CAPACITY));
     }
 }
 
