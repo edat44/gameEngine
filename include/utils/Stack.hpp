@@ -25,13 +25,13 @@ public:
     [[nodiscard]] bool empty() const;
     void print(std::ostream& out=std::cout) const;
 
-    friend std::ostream& operator<<(std::ostream &out, const Stack &q) {
-        out << "size: " << q.size << ", cap: " << q.capacity << std::endl;
-        if (q.empty()) {
+    friend std::ostream& operator<<(std::ostream &out, const Stack &s) {
+        out << "size: " << s.size << ", cap: " << s.capacity << std::endl;
+        if (s.empty()) {
             std::cout << "<empty>";
         } else {
-            for (size_t i = 0; i < q.size; i++) {
-                out << q.data[i] << (i == q.size - 1 ? "" : ", ");
+            for (size_t i = 0; i < s.size; i++) {
+                out << s.data[i] << (i == s.size - 1 ? "" : ", ");
             }
         }
         out << std::endl;

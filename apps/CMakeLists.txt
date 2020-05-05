@@ -37,3 +37,7 @@ add_executable(stack stack.cpp)
 
 TARGET_LINK_LIBRARIES(stack
         game_lib)
+
+add_executable(queue queue.cpp)
+
+TARGET_LINK_LIBRARIES(queue game_lib)

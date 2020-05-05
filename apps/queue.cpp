@@ -1,23 +1,26 @@
 
 #include <iostream>
 
-#include "utils/Stack.hpp"
+#include "utils/Queue.hpp"
 
 
 // Starter program from https://www.sfml-dev.org/tutorials/2.5/start-linux.php
 int main(int argc, char* argv[]) {
-    Stack<int> stack;
-    stack.print();
+    Queue<int> q;
+    q.print();
     for (int i = 0; i < 21; i++) {
-        stack.push(i);
-        stack.print();
+        q.enqueue(i);
+        q.print();
     }
     for (int i = 0; i < 22; i++) {
-        std::optional<int> element = stack.pop();
+        std::optional<int> element = q.dequeue();
         if (element) {
-            std::cout << "Removing " << element.value() << std::endl;
+            std::cout << "Removed " << element.value() << std::endl;
         } else {
             std::cout << "Stack is empty!" << std::endl;
         }
+        q.print();
     }
+    q.enqueue(5);
+    q.print();
 }
