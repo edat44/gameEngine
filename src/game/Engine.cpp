@@ -6,6 +6,8 @@
 #include <SFML/System/Sleep.hpp>
 #include "game/Engine.hpp"
 
+namespace game {
+
 void Engine::Run() {
     this->running = true;
     this->clock.restart();
@@ -24,8 +26,14 @@ void Engine::Tick(sf::Time dt) {
     while (!this->events->Empty()) {
         auto e = this->events->Dequeue();
         if (e) {
-            std::cout << "Event of type: " << e.value()->GetType() << "!" << std::endl;
-            e.value()->Handle();
+            if (auto *eTest = std::get_if<std::shared_ptr<events::Event>>(&e.value())) {
+                auto event = *eTest;
+                std::cout << "Event of type: " << event->GetType() << "!" << std::endl;
+                event->Handle();
+            } else if (auto *eTest2 = std::get_if<std::shared_ptr<sf::Event>>(&e.value())) {
+                auto event = *eTest2;
+                std::cout << "Built in SF Event!" << std::endl;
+            }
         }
     }
 }
@@ -34,6 +42,8 @@ void Engine::Stop() {
     this->running = false;
 }
 
-eventQueue_t Engine::Events() const {
+utils::eventQueue_t Engine::Events() const {
     return this->events;
 }
+
+} // ns game

@@ -13,6 +13,8 @@
 #include <events/Event.hpp>
 #include <functional>
 
+namespace game::utils {
+
 template <typename T>
 class LinkedList {
 public:
@@ -87,7 +89,8 @@ void LinkedList<T>::PushBack(T element) {
 
 template <typename T>
 void LinkedList<T>::Push(T element, Node<T>* &front, Node<T>* &back,
-                         std::function<Node<T>**(Node<T>*)> next, std::function<Node<T>**(Node<T>*)> prev) {
+                         std::function<Node<T>**(Node<T>*)> next,
+                         std::function<Node<T>**(Node<T>*)> prev) {
     std::lock_guard<std::mutex> l(this->lock);
     auto node = new Node(element);
     if (this->Empty()) {
@@ -137,5 +140,7 @@ template <typename T>
 void LinkedList<T>::Print(std::ostream& out) const {
     out << *this;
 }
+
+} // ns game::utils
 
 #endif //GAME_LINKEDLIST_HPP

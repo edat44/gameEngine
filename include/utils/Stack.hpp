@@ -8,6 +8,7 @@
 #include <optional>
 #include <utils/LinkedList.hpp>
 
+namespace game::utils {
 
 template <typename T>
 class Stack : public LinkedList<T> {
@@ -27,7 +28,7 @@ std::optional<T> Stack<T>::Pop() {
     return this->PopBack();
 }
 
-
+} // ns game::utils
 
 
 #endif //GAME_STACK_HPP

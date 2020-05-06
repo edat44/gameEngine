@@ -8,7 +8,9 @@
 #include <events/ClientMessageEvent.hpp>
 #include <events/ClientDisconnectedEvent.hpp>
 
-Server::Server(int localPort, eventQueue_t events) {
+namespace game::network {
+
+Server::Server(int localPort, utils::eventQueue_t events) {
     this->listener = std::make_unique<sf::TcpListener>();
     if (this->listener->listen(localPort) != sf::Socket::Done) {
         std::cout << "Could not listen!" << std::endl;
@@ -37,7 +39,7 @@ void Server::Listen() {
                 auto socket = std::make_shared<sf::TcpSocket>();
                 if (this->listener->accept(*socket) == sf::Socket::Done) {
                     this->AddClient(socket);
-                    this->events->Enqueue(std::make_shared<ClientConnectedEvent>(socket));
+                    this->events->Enqueue(std::make_shared<events::ClientConnectedEvent>(socket));
                 } else {
                     std::cout << "Cannot create new connection" << std::endl;
                 }
@@ -48,15 +50,13 @@ void Server::Listen() {
                         auto packet = std::make_shared<sf::Packet>();
                         switch(auto status = socket->receive(*packet)) {
                         case sf::Socket::Done: {
-                            this->events->Enqueue(std::make_shared<ClientMessageEvent>(socket,
-                                    packet));
+                            this->events->Enqueue(std::make_shared<events::ClientMessageEvent>(socket,packet));
                             it++;
                             break;
                         } case sf::Socket::Disconnected:
                             it = this->clients.erase(it);
                             this->selector.remove(*socket);
-                            this->events->Enqueue(std::make_shared<ClientDisconnectedEvent>
-                                    (socket));
+                            this->events->Enqueue(std::make_shared<events::ClientDisconnectedEvent>(socket));
                             break;
                         default:
                             std::cout << "Unhandled packet status: " << status << std::endl;
@@ -76,3 +76,5 @@ void Server::AddClient(const std::shared_ptr<sf::TcpSocket>& socket) {
     this->selector.add(*client->GetSocket());
     std::cout << "New client created! total size: " << this->clients.size() << std::endl;
 }
+
+} // ns game::network

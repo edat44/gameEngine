@@ -10,27 +10,33 @@
 #include <list>
 
 #include <memory>
-#include "Client.hpp"
+#include <network/Client.hpp>
 #include <utils/Queue.hpp>
+
+namespace game::network {
 
 class Server {
 public:
-    explicit Server(int localPort, eventQueue_t events);
+    explicit Server(int localPort, utils::eventQueue_t events);
 
     void Start();
+
     void Stop();
 
 private:
     void Listen();
-    void AddClient(const std::shared_ptr<sf::TcpSocket>& socket);
+
+    void AddClient(const std::shared_ptr<sf::TcpSocket> &socket);
 
     sf::SocketSelector selector;
     std::unique_ptr<sf::TcpListener> listener;
     std::list<std::shared_ptr<Client>> clients;
     std::thread listenThread;
     bool running;
-    eventQueue_t events;
-};
+    utils::eventQueue_t events;
+}; // class Server
+
+} // ns game::network
 
 
 #endif //GAME_SERVER_HPP

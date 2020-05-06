@@ -10,17 +10,23 @@
 #include <SFML/Network/TcpSocket.hpp>
 #include <memory>
 
+namespace game::network {
+
 class Client : sf::NonCopyable {
 public:
     Client() = delete;
-    explicit Client(std::shared_ptr<sf::TcpSocket> socket);
+
+    explicit Client(std::shared_ptr<sf::TcpSocket> socket) : socket(std::move(socket)) {}
 
     [[nodiscard]] std::shared_ptr<sf::TcpSocket> GetSocket() const;
 
 
 private:
     std::shared_ptr<sf::TcpSocket> socket;
-};
+
+}; // class Client
+
+} // ns game::network
 
 
 #endif //GAME_CLIENT_HPP

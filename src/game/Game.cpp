@@ -2,11 +2,13 @@
 // Created by edat44 on 4/20/20.
 //
 
-#include "game/Game.hpp"
+#include <game/Game.hpp>
+
+namespace game {
 
 Game::Game() {
-    this->engine = new Engine();
-    this->server = new Server(9003, this->engine->Events());
+    this->engine = std::make_shared<Engine>();
+    this->server = std::make_shared<network::Server>(9003, this->engine->Events());
 }
 
 
@@ -16,8 +18,7 @@ void Game::Start() {
 }
 
 Game::~Game() {
-    delete this->engine;
-
     this->server->Stop();
-    delete this->server;
 }
+
+} // ns game

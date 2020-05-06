@@ -12,6 +12,8 @@
 #include <utility>
 #include <events/Event.hpp>
 
+namespace game::events {
+
 class ClientMessageEvent : public Event {
 public:
     ClientMessageEvent(std::shared_ptr<sf::TcpSocket> socket,
@@ -23,6 +25,8 @@ private:
     std::shared_ptr<sf::TcpSocket> socket;
     std::shared_ptr<sf::Packet> packet;
 };
+
+} // ns game::events
 
 
 #endif //GAME_CLIENTMESSAGEEVENT_HPP

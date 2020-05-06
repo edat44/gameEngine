@@ -8,6 +8,8 @@
 
 #include <string>
 
+namespace game::events {
+
 class Event {
 public:
     explicit Event(std::string type) : type(std::move(type)) {}
@@ -19,5 +21,6 @@ private:
     std::string type;
 };
 
+} // ns game::events
 
 #endif //GAME_EVENT_HPP

@@ -7,13 +7,13 @@
 #ifndef GAME_WINDOW_H
 #define GAME_WINDOW_H
 
-namespace utils {
+namespace game::utils {
 
     // Setups a new window with extra parameters than the default sf::Window::create
     void SetupWindow(sf::Window &window, unsigned int width, unsigned int height,
                      const sf::String &title, int x, int y, sf::Uint32 style);
 
-} // namespace utils
+} // ns game::utils
 
 
 #endif //COWGAME_WINDOW_H

@@ -8,16 +8,22 @@
 #include <network/Server.hpp>
 #include <game/Engine.hpp>
 
+namespace game {
+
 class Game {
 public:
     Game();
+
     ~Game();
 
     void Start();
 
 private:
-    Engine* engine;
-    Server* server;
-};
+    std::shared_ptr<Engine> engine;
+    std::shared_ptr<network::Server> server;
+
+}; // class Game
+
+} // ns game
 
 #endif //GAME_GAME_HPP

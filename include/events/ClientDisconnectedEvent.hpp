@@ -9,6 +9,7 @@
 #include <memory>
 #include <SFML/Network/TcpSocket.hpp>
 
+namespace game::events {
 
 class ClientDisconnectedEvent: public Event {
 public:
@@ -19,6 +20,8 @@ public:
 private:
     std::shared_ptr<sf::TcpSocket> socket;
 };
+
+} // ns game::events
 
 
 #endif //GAME_CLIENTDISCONNECTEDEVENT_HPP

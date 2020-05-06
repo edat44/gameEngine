@@ -5,6 +5,8 @@
 #ifndef GAME_NODE_HPP
 #define GAME_NODE_HPP
 
+namespace game::utils {
+
 template <typename T>
 struct Node;
 
@@ -20,5 +22,6 @@ public:
     Node<T>* prev;
 };
 
+} // ns game::utils
 
 #endif //GAME_NODE_HPP
