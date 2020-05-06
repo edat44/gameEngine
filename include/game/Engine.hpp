@@ -14,9 +14,12 @@
 class Engine {
 public:
     Engine() : running(false), tickTime(sf::seconds(1.0 / 1.0)),
-        events(std::make_shared<Queue<Event*>>()) {}
+               events(std::make_shared<Queue<std::shared_ptr<Event>>>()) {}
+
     void Run();
+
     void Stop();
+
     [[nodiscard]] eventQueue_t Events() const;
 
 private:

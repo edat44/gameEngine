@@ -12,7 +12,10 @@ void Engine::Run() {
     while (this->running) {
         sf::Time elapsed = this->clock.restart();
         this->Tick(elapsed);
-        sf::sleep(this->tickTime - this->clock.getElapsedTime());
+        sf::Time remaining = this->tickTime - this->clock.getElapsedTime();
+        if (remaining > sf::Time::Zero) {
+            sf::sleep(remaining);
+        }
     }
 }
 

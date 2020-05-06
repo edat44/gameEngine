@@ -22,11 +22,11 @@ public:
 
 private:
     void Listen();
-    void AddClient(sf::TcpSocket *socket);
+    void AddClient(const std::shared_ptr<sf::TcpSocket>& socket);
 
     sf::SocketSelector selector;
     std::unique_ptr<sf::TcpListener> listener;
-    std::list<Client*> clients;
+    std::list<std::shared_ptr<Client>> clients;
     std::thread listenThread;
     bool running;
     eventQueue_t events;

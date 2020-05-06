@@ -6,16 +6,17 @@
 #define GAME_CLIENTCONNECTEDEVENT_HPP
 
 #include <SFML/Network/TcpSocket.hpp>
+#include <memory>
 #include "Event.hpp"
 
 class ClientConnectedEvent : public Event {
 public:
-    explicit ClientConnectedEvent(sf::TcpSocket *socket) : Event("ClientConnectedEvent"),
-            socket(socket) {}
+    explicit ClientConnectedEvent(std::shared_ptr<sf::TcpSocket> socket) :
+        Event("ClientConnectedEvent"), socket(std::move(socket)) {}
 
     void Handle() override;
 private:
-    sf::TcpSocket* socket;
+    std::shared_ptr<sf::TcpSocket> socket;
 };
 
 

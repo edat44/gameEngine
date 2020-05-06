@@ -24,6 +24,7 @@ public:
     void Print(std::ostream& out= std::cout) const;
 
     friend std::ostream& operator<<(std::ostream &out, const LinkedList &list) {
+        std::lock_guard<std::mutex> l(list.lock);
         out << "size: " << list.size << std::endl;
         if (list.Empty()) {
             out << "<Empty>";
@@ -54,10 +55,12 @@ private:
     Node<T>* head;
     Node<T>* tail;
     size_t size;
+    std::mutex lock;
 };
 
 template <typename T>
 LinkedList<T>::~LinkedList() {
+    std::lock_guard<std::mutex> l(this->lock);
     Node<T>* curr = this->head;
     Node<T>* next = curr;
     while (curr) {
@@ -85,6 +88,7 @@ void LinkedList<T>::PushBack(T element) {
 template <typename T>
 void LinkedList<T>::Push(T element, Node<T>* &front, Node<T>* &back,
                          std::function<Node<T>**(Node<T>*)> next, std::function<Node<T>**(Node<T>*)> prev) {
+    std::lock_guard<std::mutex> l(this->lock);
     auto node = new Node(element);
     if (this->Empty()) {
         front = node;
@@ -110,6 +114,7 @@ std::optional<T> LinkedList<T>::PopBack() {
 template<typename T>
 std::optional<T> LinkedList<T>::Pop(Node<T>* &front, Node<T>* &back,
         std::function<Node<T>**(Node<T>*)> next, std::function<Node<T>**(Node<T>*)> prev) {
+    std::lock_guard<std::mutex> l(this->lock);
     if (this->Empty()) {
         return std::optional<T>();
     } else {

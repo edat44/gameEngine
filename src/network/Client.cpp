@@ -4,8 +4,10 @@
 
 #include "network/Client.hpp"
 
-Client::Client(sf::TcpSocket* socket) {
-    this->socket = std::shared_ptr<sf::TcpSocket>(socket);
+#include <utility>
+
+Client::Client(std::shared_ptr<sf::TcpSocket> socket) {
+    this->socket = std::move(socket);
 }
 
 std::shared_ptr<sf::TcpSocket> Client::GetSocket() const {
