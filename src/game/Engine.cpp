@@ -8,6 +8,18 @@
 
 namespace game {
 
+
+struct EventVisitor {
+    void operator()(const std::shared_ptr<events::Event> &event) {
+        std::cout << "Custom event of type: " << event->GetType() << "!" << std::endl;
+        event->Handle();
+    }
+
+    void operator()(const std::shared_ptr<sf::Event> &event) {
+        std::cout << "SF event of type: " << event->type << "!" << std::endl;
+    }
+};
+
 void Engine::Run() {
     this->running = true;
     this->clock.restart();
@@ -23,17 +35,10 @@ void Engine::Run() {
 
 void Engine::Tick(sf::Time dt) {
     std::cout << dt.asMilliseconds() << " milliseconds!" << std::endl;
-    while (!this->events->Empty()) {
+    while (!this->events->Empty() && this->clock.getElapsedTime() < this->tickTime) {
         auto e = this->events->Dequeue();
         if (e) {
-            if (auto *eTest = std::get_if<std::shared_ptr<events::Event>>(&e.value())) {
-                auto event = *eTest;
-                std::cout << "Event of type: " << event->GetType() << "!" << std::endl;
-                event->Handle();
-            } else if (auto *eTest2 = std::get_if<std::shared_ptr<sf::Event>>(&e.value())) {
-                auto event = *eTest2;
-                std::cout << "Built in SF Event!" << std::endl;
-            }
+            std::visit(EventVisitor{}, e.value());
         }
     }
 }
