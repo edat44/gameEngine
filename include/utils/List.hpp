@@ -12,50 +12,36 @@ namespace game::utils {
 template <typename T>
 class List : public LinkedList<T>{
 public:
-    List() : LinkedList<T>(), headItr(this->head), tailItr(nullptr) {}
+    List() : LinkedList<T>() {}
     void Insert(T element);
-    NodeForwardIterator<T>& begin() { return this->headItr; }
-    NodeForwardIterator<T>& end() { return this->tailItr; }
+    NodeForwardIterator<T> begin() { return NodeForwardIterator<T>(this->head); }
+    NodeForwardIterator<T> end() { return NodeForwardIterator<T>(nullptr); }
     NodeForwardIterator<T> erase(NodeForwardIterator<T> target);
-
-private:
-    void UpdateHeadItr();
-    NodeForwardIterator<T> headItr;
-    NodeForwardIterator<T> tailItr;
 };
-
-template <typename T>
-void List<T>::UpdateHeadItr() {
-    this->headItr = NodeForwardIterator(this->head);
-}
 
 template <typename T>
 void List<T>::Insert(T element) {
     this->PushBack(element);
-    this->UpdateHeadItr();
 }
 
 template <typename T>
 NodeForwardIterator<T> List<T>::erase(NodeForwardIterator<T> target) {
-    NodeForwardIterator<T> toReturn = target;
     for (auto itr = this->begin(); itr != this->end(); itr++) {
         if (itr == target) {
-            auto node = *itr;
+            Node<T>* node = itr.GetNode();
             std::cout << "Found node to erase!" << std::endl;
-            if (itr->prev) {
-                itr->prev->next = itr->next;
+            if (node->prev) {
+                node->prev->next = node->next;
             }
-            if (itr->next) {
-                itr->next->prev = itr->prev;
+            if (node->next) {
+                node->next->prev = node->prev;
             }
-            auto newItr = NodeForwardIterator<T>(itr->next);
-            delete *itr;
-            toReturn = newItr;
-            break;
+            auto toReturn = NodeForwardIterator<T>(node->next);
+            delete node;
+            return toReturn;
         }
     }
-    this->UpdateHeadItr();
-    return toReturn;
+    return target;
 }
 
 } // ns game::utils

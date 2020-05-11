@@ -21,6 +21,12 @@ Server::Server(int localPort, std::shared_ptr<game::Engine> engine) {
     this->engine->AddTicker(this);
 }
 
+Server::~Server() {
+    this->listener->close();
+    for (auto& client : this->clients) {
+        client->GetSocket()->disconnect();
+    }
+}
 
 void Server::Tick(sf::Time dt) {
     std::cout << "Checking for network data" << std::endl;
@@ -38,27 +44,29 @@ void Server::Tick(sf::Time dt) {
                 break;
         }
     }
-    std::cout << "Looping through clients..." << std::endl;
-    for (auto& it = this->clients.begin(); it != this->clients.end();) {
-        std::cout << "Found a client!" << std::endl;
-        auto& client = it->data;
-        auto packet = std::make_shared<sf::Packet>();
-        switch(auto status = client->GetSocket()->receive(*packet)) {
-        case sf::Socket::Done: {
-            this->engine->AddEvent(std::make_shared<events::ClientMessageEvent>(client,packet));
-            it++;
-            break;
-        } case sf::Socket::Disconnected:
-            it = this->clients.erase(it);
-            this->engine->AddEvent(std::make_shared<events::ClientDisconnectedEvent>(client));
-            break;
-        default:
-            std::cout << "Unhandled packet status: " << status << std::endl;
-            it++;
-            break;
+    std::cout << "# clients connected: " << this->clients.Size() << std::endl;
+    for (auto it = this->clients.begin(); it != this->clients.end();) {
+        auto& client = *it;
+        std::cout << "Checking client " << client->GetSocket()->getRemoteAddress() << " for data!" << std::endl;
+        auto status = sf::Socket::Done;
+        while (status == sf::Socket::Done) {
+            auto packet = std::make_shared<sf::Packet>();
+            switch (status = client->GetSocket()->receive(*packet)) {
+                case sf::Socket::Done: {
+                    this->engine->AddEvent(std::make_shared<events::ClientMessageEvent>(client, packet));
+                    break;
+                }
+                case sf::Socket::Disconnected:
+                    it = this->clients.erase(it);
+                    this->engine->AddEvent(std::make_shared<events::ClientDisconnectedEvent>(client));
+                    break;
+                default:
+                    std::cout << "Not ready!" << std::endl;
+                    it++;
+                    break;
+            }
         }
     }
-    std::cout << "Done looping" << std::endl;
 }
 
 std::shared_ptr<Client> Server::AddClient(const std::shared_ptr<sf::TcpSocket>& socket) {

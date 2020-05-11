@@ -9,7 +9,7 @@ namespace game {
 
 Game::Game() {
     this->engine = std::make_shared<Engine>();
-    this->server = std::make_shared<network::Server>(9003, this->engine);
+    this->server = std::make_shared<network::Server>(9010, this->engine);
     this->engine->AddTicker(this);
 }
 

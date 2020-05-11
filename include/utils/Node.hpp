@@ -65,16 +65,20 @@ public:
 
     template <typename OtherType>
     bool operator!=(const NodeForwardIterator<OtherType>& rhs) const {
-        return itr != rhs.itr;
+        return !(*this == rhs);
     }
 
-    Node<Type>* operator*() const {
+    Type& operator*() const {
         assert(itr != nullptr && "Invalid iterator dereference");
-        return itr;
+        return itr->data;
     }
 
-    Node<Type>* operator->() const {
+    Type& operator->() const {
         assert(itr != nullptr && "Invalid iterator dereference");
+        return itr->data;
+    }
+
+    Node<Type>* GetNode() const {
         return itr;
     }
 

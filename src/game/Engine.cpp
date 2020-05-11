@@ -36,9 +36,7 @@ void Engine::Run() {
 void Engine::Tick(sf::Time dt) {
     std::cout << dt.asMilliseconds() << " milliseconds, " << this->events->Size() << " events in queue" << std::endl;
     std::cout << "Tickers in list: " << this->tickers.Size() << std::endl;
-    for (auto itr : this->tickers) {
-        auto ticker = **itr;
-        std::cout << "About to tick an item!" << std::endl;
+    for (auto& ticker : this->tickers) {
         ticker->Tick(dt);
     }
 
@@ -65,6 +63,7 @@ void Engine::AddTicker(game::Ticker* ticker) {
 }
 
 void Engine::AddEvent(std::shared_ptr<game::events::Event> event) {
+    std::cout << "\t\tAdding new event of type " << event->GetType() << std::endl;
     this->events->Enqueue(std::move(event));
 }
 

@@ -21,6 +21,8 @@ class Server : public Ticker, public std::enable_shared_from_this<Server> {
 public:
     explicit Server(int localPort, std::shared_ptr<game::Engine> engine);
 
+    ~Server();
+
     void Tick(sf::Time dt) override;
 
 private:
