@@ -9,11 +9,11 @@
 namespace game::events {
 
 void ClientMessageEvent::Handle() {
-    std::cout << "New client message ==> " << this->socket->getRemoteAddress() << ":" <<
-              this->socket->getRemotePort() << std::endl;
+    std::cout << "New client message ==> " << this->client->GetSocket()->getRemoteAddress() << ":" <<
+              this->client->GetSocket()->getRemotePort() << std::endl;
     sf::Packet returnPacket;
     returnPacket << "Message received!";
-    this->socket->send(returnPacket);
+    this->client->GetSocket()->send(returnPacket);
 }
 
 } // ns game::events

@@ -42,6 +42,10 @@ public:
         return out;
     }
 
+    [[nodiscard]] size_t Size() const;
+
+
+
 protected:
     void PushBack(T element);
     void PushFront(T element);
@@ -53,10 +57,11 @@ protected:
     std::optional<T> Pop(Node<T>* &front, Node<T>* &back,
             std::function<Node<T>**(Node<T>*)> next, std::function<Node<T>**(Node<T>*)> prev);
 
-private:
     Node<T>* head;
     Node<T>* tail;
     size_t size;
+
+private:
     std::mutex lock;
 };
 
@@ -75,6 +80,11 @@ LinkedList<T>::~LinkedList() {
 template <typename T>
 bool LinkedList<T>::Empty() const {
     return this->size == 0;
+}
+
+template <typename T>
+size_t LinkedList<T>::Size() const {
+    return this->size;
 }
 
 template <typename T>

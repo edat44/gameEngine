@@ -10,6 +10,8 @@
 #include <SFML/System/Clock.hpp>
 #include <utils/Queue.hpp>
 #include <events/Event.hpp>
+#include <utils/List.hpp>
+#include "Ticker.hpp"
 
 namespace game {
 
@@ -24,6 +26,9 @@ public:
 
     [[nodiscard]] utils::eventQueue_t Events() const;
 
+    void AddTicker(game::Ticker* ticker);
+    void AddEvent(std::shared_ptr<game::events::Event>);
+
 private:
     void Tick(sf::Time dt);
 
@@ -31,6 +36,7 @@ private:
     sf::Time tickTime;
     utils::eventQueue_t events;
     sf::Clock clock;
+    utils::List<std::shared_ptr<game::Ticker>> tickers;
 }; // class Engine
 
 } // ns game

@@ -12,28 +12,24 @@
 #include <memory>
 #include <network/Client.hpp>
 #include <utils/Queue.hpp>
+#include <game/Ticker.hpp>
+#include <game/Engine.hpp>
 
 namespace game::network {
 
-class Server {
+class Server : public Ticker, public std::enable_shared_from_this<Server> {
 public:
-    explicit Server(int localPort, utils::eventQueue_t events);
+    explicit Server(int localPort, std::shared_ptr<game::Engine> engine);
 
-    void Start();
-
-    void Stop();
+    void Tick(sf::Time dt) override;
 
 private:
-    void Listen();
 
-    void AddClient(const std::shared_ptr<sf::TcpSocket> &socket);
+    std::shared_ptr<Client> AddClient(const std::shared_ptr<sf::TcpSocket> &socket);
 
-    sf::SocketSelector selector;
     std::unique_ptr<sf::TcpListener> listener;
-    std::list<std::shared_ptr<Client>> clients;
-    std::thread listenThread;
-    bool running;
-    utils::eventQueue_t events;
+    game::utils::List<std::shared_ptr<Client>> clients;
+    std::shared_ptr<game::Engine> engine;
 }; // class Server
 
 } // ns game::network

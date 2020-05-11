@@ -7,18 +7,18 @@
 
 #include <events/Event.hpp>
 #include <memory>
-#include <SFML/Network/TcpSocket.hpp>
+#include <network/Client.hpp>
 
 namespace game::events {
 
 class ClientDisconnectedEvent: public Event {
 public:
-    explicit ClientDisconnectedEvent(std::shared_ptr<sf::TcpSocket> socket) :
-    Event("ClientDisconnectedEvent"), socket(std::move(socket)) {}
+    explicit ClientDisconnectedEvent(std::shared_ptr<game::network::Client> client) :
+    Event("ClientDisconnectedEvent"), client(std::move(client)) {}
 
     void Handle() override;
 private:
-    std::shared_ptr<sf::TcpSocket> socket;
+    std::shared_ptr<game::network::Client> client;
 };
 
 } // ns game::events

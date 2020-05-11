@@ -11,18 +11,19 @@
 #include <SFML/Network/Packet.hpp>
 #include <utility>
 #include <events/Event.hpp>
+#include <network/Client.hpp>
 
 namespace game::events {
 
 class ClientMessageEvent : public Event {
 public:
-    ClientMessageEvent(std::shared_ptr<sf::TcpSocket> socket,
+    ClientMessageEvent(std::shared_ptr<game::network::Client> client,
             std::shared_ptr<sf::Packet> packet) :
-            Event("ClientMessageEvent"), socket(std::move(socket)), packet(std::move(packet)) {}
+            Event("ClientMessageEvent"), client(std::move(client)), packet(std::move(packet)) {}
 
     void Handle() override;
 private:
-    std::shared_ptr<sf::TcpSocket> socket;
+    std::shared_ptr<game::network::Client> client;
     std::shared_ptr<sf::Packet> packet;
 };
 

@@ -10,71 +10,63 @@
 
 namespace game::network {
 
-Server::Server(int localPort, utils::eventQueue_t events) {
+Server::Server(int localPort, std::shared_ptr<game::Engine> engine) {
     this->listener = std::make_unique<sf::TcpListener>();
     if (this->listener->listen(localPort) != sf::Socket::Done) {
         std::cout << "Could not listen!" << std::endl;
     }
-    this->selector.add(*this->listener);
+    this->listener->setBlocking(false);
     std::cout << "Listening on " << listener->getLocalPort() << std::endl;
-    this->running = false;
-    this->events = std::move(events);
+    this->engine = std::move(engine);
+    this->engine->AddTicker(this);
 }
 
-void Server::Start() {
-    this->running = true;
-    this->listenThread = std::thread(&Server::Listen, this);
-    this->listenThread.detach();
-}
 
-void Server::Stop() {
-    this->running = false;
-}
-
-void Server::Listen() {
-    std::cout << "Listening for socket data to server" << std::endl;
-    while (this->running) {
-        if (this->selector.wait()) {
-            if (selector.isReady(*this->listener)) {
-                auto socket = std::make_shared<sf::TcpSocket>();
-                if (this->listener->accept(*socket) == sf::Socket::Done) {
-                    this->AddClient(socket);
-                    this->events->Enqueue(std::make_shared<events::ClientConnectedEvent>(socket));
-                } else {
-                    std::cout << "Cannot create new connection" << std::endl;
-                }
-            } else {
-                for (auto it = this->clients.begin(); it != this->clients.end();) {
-                    auto socket = (*it)->GetSocket();
-                    if (this->selector.isReady(*socket)) {
-                        auto packet = std::make_shared<sf::Packet>();
-                        switch(auto status = socket->receive(*packet)) {
-                        case sf::Socket::Done: {
-                            this->events->Enqueue(std::make_shared<events::ClientMessageEvent>(socket,packet));
-                            it++;
-                            break;
-                        } case sf::Socket::Disconnected:
-                            it = this->clients.erase(it);
-                            this->selector.remove(*socket);
-                            this->events->Enqueue(std::make_shared<events::ClientDisconnectedEvent>(socket));
-                            break;
-                        default:
-                            std::cout << "Unhandled packet status: " << status << std::endl;
-                            break;
-                        }
-                    }
-                }
-            }
+void Server::Tick(sf::Time dt) {
+    std::cout << "Checking for network data" << std::endl;
+    {
+        auto socket = std::make_shared<sf::TcpSocket>();
+        switch (auto status = this->listener->accept(*socket)) {
+            case sf::Socket::Done: {
+                auto client = this->AddClient(socket);
+                this->engine->AddEvent(std::make_shared<events::ClientConnectedEvent>(client));
+                break;
+            } case sf::Socket::NotReady:
+                break;
+            default:
+                std::cout << "Unhandled listen socket status: " << status << std::endl;
+                break;
         }
     }
-    std::cout << "Server shutting down!" << std::endl;
+    std::cout << "Looping through clients..." << std::endl;
+    for (auto& it = this->clients.begin(); it != this->clients.end();) {
+        std::cout << "Found a client!" << std::endl;
+        auto& client = it->data;
+        auto packet = std::make_shared<sf::Packet>();
+        switch(auto status = client->GetSocket()->receive(*packet)) {
+        case sf::Socket::Done: {
+            this->engine->AddEvent(std::make_shared<events::ClientMessageEvent>(client,packet));
+            it++;
+            break;
+        } case sf::Socket::Disconnected:
+            it = this->clients.erase(it);
+            this->engine->AddEvent(std::make_shared<events::ClientDisconnectedEvent>(client));
+            break;
+        default:
+            std::cout << "Unhandled packet status: " << status << std::endl;
+            it++;
+            break;
+        }
+    }
+    std::cout << "Done looping" << std::endl;
 }
 
-void Server::AddClient(const std::shared_ptr<sf::TcpSocket>& socket) {
+std::shared_ptr<Client> Server::AddClient(const std::shared_ptr<sf::TcpSocket>& socket) {
+    socket->setBlocking(false);
     auto client = std::make_shared<Client>(socket);
-    this->clients.push_back(client);
-    this->selector.add(*client->GetSocket());
-    std::cout << "New client created! total size: " << this->clients.size() << std::endl;
+    this->clients.Insert(client);
+    std::cout << "New client created! total size: " << this->clients.Size() << std::endl;
+    return client;
 }
 
 } // ns game::network

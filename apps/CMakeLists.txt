@@ -40,4 +40,5 @@ add_executable(queue queue.cpp)
 TARGET_LINK_LIBRARIES(queue game_lib)
 
 add_executable(game game.cpp)
-target_link_libraries(game game_lib -lsfml-network -lsfml-system -lpthread)
+target_link_libraries(game game_lib -lsfml-network -lsfml-system -lsfml-graphics
+        -lsfml-window -lpthread)

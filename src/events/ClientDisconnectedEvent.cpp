@@ -9,8 +9,8 @@
 namespace game::events {
 
 void ClientDisconnectedEvent::Handle() {
-    std::cout << "CLIENT DISCONNECTION ==> " << this->socket->getRemoteAddress() << ":" <<
-              this->socket->getRemotePort() << std::endl;
+    std::cout << "CLIENT DISCONNECTION ==> " << this->client->GetSocket()->getRemoteAddress() << ":" <<
+              this->client->GetSocket()->getRemotePort() << std::endl;
 }
 
 } // ns game::events

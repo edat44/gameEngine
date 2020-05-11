@@ -7,20 +7,25 @@
 
 #include <network/Server.hpp>
 #include <game/Engine.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <game/Ticker.hpp>
 
 namespace game {
 
-class Game {
+class Game : public Ticker {
 public:
     Game();
 
     ~Game();
 
-    void Start();
+    void Start(int winWidth, int winHeight, int winX, int winY, const std::string &winTitle);
+
+    void Tick(sf::Time dt) override;
 
 private:
     std::shared_ptr<Engine> engine;
     std::shared_ptr<network::Server> server;
+    std::shared_ptr<sf::RenderWindow> window;
 
 }; // class Game
 
