@@ -1,17 +1,24 @@
-//
-// Created by edat44 on 5/5/20.
-//
+/**  A generic LinkedList Datastructure
+ *
+ * #include "containers/LinkedList.hpp" <BR>
+ *
+ * Creates a double linked list of type <T> using the Node class.
+ * Sub classes can create their own public interfaces to create various Abstract Data Types
+ *
+ * @Node.hpp
+ */
 
 #ifndef GAME_LINKEDLIST_HPP
 #define GAME_LINKEDLIST_HPP
 
-#include <containers/Node.hpp>
-#include <optional>
-#include <iostream>
-#include <mutex>
-#include <memory>
-#include <events/Event.hpp>
 #include <functional>
+#include <iostream>
+#include <memory>
+#include <mutex>
+#include <optional>
+
+#include <containers/Node.hpp>
+
 
 namespace game::containers {
 
@@ -21,13 +28,11 @@ public:
     typedef Node<T> NodeType;
     typedef size_t SizeType;
 
+// LIFECYCLE
     LinkedList() : mHead(nullptr), mTail(nullptr), mSize(0) {}
     ~LinkedList();
 
-    [[nodiscard]] bool Empty() const;
-
-    void Print(std::ostream& out= std::cout) const;
-
+// OPERATORS
     friend std::ostream& operator<<(std::ostream &out, const LinkedList &list) {
         std::lock_guard<std::mutex> l(list.mLock);
         out << "size: " << list.mSize << std::endl;
@@ -45,6 +50,23 @@ public:
         return out;
     }
 
+    /* Empty
+     *
+     * @return true if there are no elements in the LinkedList
+     */
+    [[nodiscard]] bool Empty() const;
+
+    /* Print
+     *
+     * @param out The output stream to print to
+     * @return void
+     */
+    void Print(std::ostream& out= std::cout) const;
+
+    /* Size
+     *
+     * @return The number of elements in the LinkedList
+     */
     [[nodiscard]] size_t Size() const;
 
 
@@ -63,15 +85,11 @@ protected:
     NodeType* mHead;
     NodeType* mTail;
     SizeType mSize;
-
-private:
-    std::mutex mLock;
 };
 
 template <typename T>
 LinkedList<T>::~LinkedList() {
-    std::lock_guard<std::mutex> l(this->mLock);
-    NodeType* curr = this->mHead;
+    NodeType* curr = mHead;
     NodeType* next = curr;
     while (curr) {
         next = curr->mNext;
@@ -82,31 +100,30 @@ LinkedList<T>::~LinkedList() {
 
 template <typename T>
 bool LinkedList<T>::Empty() const {
-    return this->mSize == 0;
+    return mSize == 0;
 }
 
 template <typename T>
 size_t LinkedList<T>::Size() const {
-    return this->mSize;
+    return mSize;
 }
 
 template <typename T>
 void LinkedList<T>::PushFront(T element) {
-    this->Push(element, this->mHead, this->mTail, &Node<T>::Next, &Node<T>::Prev);
+    Push(element, mHead, mTail, &Node<T>::Next, &Node<T>::Prev);
 }
 
 template <typename T>
 void LinkedList<T>::PushBack(T element) {
-    return this->Push(element, this->mTail, this->mHead, &Node<T>::Prev, &Node<T>::Next);
+    return Push(element, mTail, mHead, &Node<T>::Prev, &Node<T>::Next);
 }
 
 template <typename T>
 void LinkedList<T>::Push(T element, NodeType* &front, NodeType* &back,
                          std::function<NodeType**(NodeType*)> next,
                          std::function<NodeType**(NodeType*)> prev) {
-    std::lock_guard<std::mutex> l(this->mLock);
     auto node = new Node(element);
-    if (this->Empty()) {
+    if (Empty()) {
         front = node;
         back = node;
     } else {
@@ -114,31 +131,30 @@ void LinkedList<T>::Push(T element, NodeType* &front, NodeType* &back,
         *next(node) = front;
         front = node;
     }
-    this->mSize++;
+    mSize++;
 }
 
 template <typename T>
 std::optional<T> LinkedList<T>::PopFront() {
-    return this->Pop(this->mHead, this->mTail, &Node<T>::Next, &Node<T>::Prev);
+    return Pop(mHead, mTail, &Node<T>::Next, &Node<T>::Prev);
 }
 
 template <typename T>
 std::optional<T> LinkedList<T>::PopBack() {
-    return this->Pop(this->mTail, this->mHead, &Node<T>::Prev, &Node<T>::Next);
+    return Pop(mTail, mHead, &Node<T>::Prev, &Node<T>::Next);
 }
 
 template<typename T>
 std::optional<T> LinkedList<T>::Pop(NodeType* &front, NodeType* &back,
         std::function<Node<T>**(NodeType*)> next, std::function<Node<T>**(NodeType*)> prev) {
-    std::lock_guard<std::mutex> l(this->mLock);
-    if (this->Empty()) {
+    if (Empty()) {
         return std::optional<T>();
     } else {
         T data = front->mData;
         NodeType* newHead = *next(front);
         delete front;
-        this->mSize--;
-        if (this->Empty()) {
+        mSize--;
+        if (Empty()) {
             front = nullptr;
             back = nullptr;
         } else {
