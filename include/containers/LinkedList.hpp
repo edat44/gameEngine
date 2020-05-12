@@ -5,7 +5,7 @@
 #ifndef GAME_LINKEDLIST_HPP
 #define GAME_LINKEDLIST_HPP
 
-#include <utils/Node.hpp>
+#include <containers/Node.hpp>
 #include <optional>
 #include <iostream>
 #include <mutex>
@@ -13,7 +13,7 @@
 #include <events/Event.hpp>
 #include <functional>
 
-namespace game::utils {
+namespace game::containers {
 
 template <typename T>
 class LinkedList {
@@ -151,6 +151,6 @@ void LinkedList<T>::Print(std::ostream& out) const {
     out << *this;
 }
 
-} // ns game::utils
+} // ns game::containers
 
 #endif //GAME_LINKEDLIST_HPP

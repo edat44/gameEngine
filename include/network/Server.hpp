@@ -11,13 +11,13 @@
 
 #include <memory>
 #include <network/Client.hpp>
-#include <utils/Queue.hpp>
-#include <game/Ticker.hpp>
+#include <containers/Queue.hpp>
+#include <objects/Tickable.hpp>
 #include <game/Engine.hpp>
 
 namespace game::network {
 
-class Server : public Ticker, public std::enable_shared_from_this<Server> {
+class Server : public Tickable {
 public:
     explicit Server(int localPort, std::shared_ptr<game::Engine> engine);
 
@@ -30,7 +30,7 @@ private:
     std::shared_ptr<Client> AddClient(const std::shared_ptr<sf::TcpSocket> &socket);
 
     std::unique_ptr<sf::TcpListener> listener;
-    game::utils::List<std::shared_ptr<Client>> clients;
+    game::containers::List<std::shared_ptr<Client>> clients;
     std::shared_ptr<game::Engine> engine;
 }; // class Server
 

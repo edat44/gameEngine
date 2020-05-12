@@ -10,13 +10,13 @@ namespace game {
 Game::Game() {
     this->engine = std::make_shared<Engine>();
     this->server = std::make_shared<network::Server>(9010, this->engine);
-    this->engine->AddTicker(this);
+    //this->engine->AddTickable(this);
 }
 
 
 void Game::Start(int winWidth, int winHeight, int winX, int winY, const std::string& winTitle) {
     std::cout << "Starting game..." << std::endl;
-    this->server->SetActive(true);
+    this->server->Activate();
     this->window = std::make_shared<sf::RenderWindow>(sf::VideoMode(winWidth, winHeight), winTitle, sf::Style::Close & sf::Style::Titlebar);
     this->window->setPosition({winX, winY});
     this->window->setActive(true);
@@ -25,7 +25,7 @@ void Game::Start(int winWidth, int winHeight, int winX, int winY, const std::str
 }
 
 Game::~Game() {
-    this->server->SetActive(false);
+    this->server->Deactivate();
 }
 
 void Game::Tick(sf::Time dt) {

@@ -5,17 +5,16 @@
 #ifndef GAME_QUEUE_HPP
 #define GAME_QUEUE_HPP
 
-#include <utils/Node.hpp>
 #include <optional>
 #include <iostream>
 #include <mutex>
 #include <memory>
 #include <events/Event.hpp>
-#include <utils/LinkedList.hpp>
+#include <containers/LinkedList.hpp>
 #include <variant>
 #include <SFML/Window/Event.hpp>
 
-namespace game::utils {
+namespace game::containers {
 
 template<typename T>
 class Queue : public LinkedList<T> {
@@ -41,6 +40,6 @@ using event_t = std::variant<std::shared_ptr<events::Event>, std::shared_ptr<sf:
 using eventRawQueue_t = Queue<event_t>;
 using eventQueue_t = std::shared_ptr<eventRawQueue_t>;
 
-} // ns game::utils
+} // ns game::containers
 
 #endif //GAME_QUEUE_HPP

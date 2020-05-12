@@ -18,7 +18,7 @@ Server::Server(int localPort, std::shared_ptr<game::Engine> engine) {
     this->listener->setBlocking(false);
     std::cout << "Listening on " << listener->getLocalPort() << std::endl;
     this->engine = std::move(engine);
-    this->engine->AddTicker(this);
+    this->engine->AddTickable(this);
 }
 
 Server::~Server() {

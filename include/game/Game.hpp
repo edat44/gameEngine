@@ -8,11 +8,11 @@
 #include <network/Server.hpp>
 #include <game/Engine.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <game/Ticker.hpp>
+#include <objects/Tickable.hpp>
 
 namespace game {
 
-class Game : public Ticker {
+class Game {
 public:
     Game();
 
@@ -20,7 +20,7 @@ public:
 
     void Start(int winWidth, int winHeight, int winX, int winY, const std::string &winTitle);
 
-    void Tick(sf::Time dt) override;
+    void Tick(sf::Time dt);
 
 private:
     std::shared_ptr<Engine> engine;

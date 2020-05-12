@@ -7,7 +7,7 @@
 
 #include <cassert>
 
-namespace game::utils {
+namespace game::containers {
 
 template <typename T>
 class Node {
@@ -92,6 +92,6 @@ private:
 };
 
 
-} // ns game::utils
+} // ns game::containers
 
 #endif //GAME_NODE_HPP

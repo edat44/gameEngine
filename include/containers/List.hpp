@@ -5,9 +5,9 @@
 #ifndef GAME_LIST_HPP
 #define GAME_LIST_HPP
 
-#include <utils/LinkedList.hpp>
+#include <containers/LinkedList.hpp>
 
-namespace game::utils {
+namespace game::containers {
 
 template <typename T>
 class List : public LinkedList<T>{
@@ -17,6 +17,8 @@ public:
     NodeForwardIterator<T> begin() { return NodeForwardIterator<T>(this->head); }
     NodeForwardIterator<T> end() { return NodeForwardIterator<T>(nullptr); }
     NodeForwardIterator<T> erase(NodeForwardIterator<T> target);
+
+    NodeForwardIterator<T> find(const T& val);
 };
 
 template <typename T>
@@ -44,6 +46,16 @@ NodeForwardIterator<T> List<T>::erase(NodeForwardIterator<T> target) {
     return target;
 }
 
-} // ns game::utils
+template <typename T>
+NodeForwardIterator<T> List<T>::find(const T& val) {
+    for (auto it = this->begin(); it != this->end(); ++it) {
+        if (*it == val) {
+            return it;
+        }
+    }
+    return this->end();
+}
+
+} // ns game::containers
 
 #endif //GAME_LIST_HPP
