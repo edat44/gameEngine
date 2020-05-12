@@ -14,11 +14,11 @@ namespace game::events {
 class ClientDisconnectedEvent: public Event {
 public:
     explicit ClientDisconnectedEvent(std::shared_ptr<game::network::Client> client) :
-    Event("ClientDisconnectedEvent"), client(std::move(client)) {}
+            Event("ClientDisconnectedEvent"), mClient(std::move(client)) {}
 
     void Handle() override;
 private:
-    std::shared_ptr<game::network::Client> client;
+    std::shared_ptr<game::network::Client> mClient;
 };
 
 } // ns game::events

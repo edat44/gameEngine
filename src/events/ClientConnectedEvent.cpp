@@ -9,8 +9,8 @@
 namespace game::events {
 
 void ClientConnectedEvent::Handle() {
-    std::cout << "New client ==> " << this->client->GetSocket()->getRemoteAddress() << ":" <<
-                 this->client->GetSocket()->getRemotePort() << std::endl;
+    std::cout << "New client ==> " << this->mClient->GetSocket()->getRemoteAddress() << ":" <<
+              this->mClient->GetSocket()->getRemotePort() << std::endl;
 }
 
 } // ns game::events

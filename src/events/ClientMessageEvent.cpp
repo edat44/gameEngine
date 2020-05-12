@@ -11,15 +11,15 @@ namespace game::events {
 
 void ClientMessageEvent::Handle() {
     std::string extractedText;
-    *this->packet >> extractedText;
-    std::cout << "New client message ==> " << this->client->GetSocket()->getRemoteAddress() << ":" <<
-              this->client->GetSocket()->getRemotePort() << "    '" << extractedText << "'" << std::endl;
+    *this->mPacket >> extractedText;
+    std::cout << "New client message ==> " << this->mClient->GetSocket()->getRemoteAddress() << ":" <<
+              this->mClient->GetSocket()->getRemotePort() << "    '" << extractedText << "'" << std::endl;
 
     sf::Packet returnPacket;
     std::stringstream ss;
     ss << "Message received: '" << extractedText << "'";
     returnPacket << ss.str();
-    this->client->GetSocket()->send(returnPacket);
+    this->mClient->GetSocket()->send(returnPacket);
 }
 
 } // ns game::events

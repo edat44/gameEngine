@@ -9,7 +9,7 @@
 namespace game::network {
 
 std::shared_ptr<sf::TcpSocket> Client::GetSocket() const {
-    return this->socket;
+    return this->mSocket;
 }
 
 } // ns game::network

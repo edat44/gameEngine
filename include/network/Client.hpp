@@ -16,13 +16,13 @@ class Client : sf::NonCopyable {
 public:
     Client() = delete;
 
-    explicit Client(std::shared_ptr<sf::TcpSocket> socket) : socket(std::move(socket)) {}
+    explicit Client(std::shared_ptr<sf::TcpSocket> socket) : mSocket(std::move(socket)) {}
 
     [[nodiscard]] std::shared_ptr<sf::TcpSocket> GetSocket() const;
 
 
 private:
-    std::shared_ptr<sf::TcpSocket> socket;
+    std::shared_ptr<sf::TcpSocket> mSocket;
 
 }; // class Client
 

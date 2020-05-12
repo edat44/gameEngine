@@ -23,9 +23,9 @@ public:
     void Tick(sf::Time dt);
 
 private:
-    std::shared_ptr<Engine> engine;
-    std::shared_ptr<network::Server> server;
-    std::shared_ptr<sf::RenderWindow> window;
+    std::shared_ptr<Engine> mEngine;
+    std::shared_ptr<network::Server> mServer;
+    std::shared_ptr<sf::RenderWindow> mWindow;
 
 }; // class Game
 

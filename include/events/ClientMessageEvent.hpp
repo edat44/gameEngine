@@ -19,12 +19,12 @@ class ClientMessageEvent : public Event {
 public:
     ClientMessageEvent(std::shared_ptr<game::network::Client> client,
             std::shared_ptr<sf::Packet> packet) :
-            Event("ClientMessageEvent"), client(std::move(client)), packet(std::move(packet)) {}
+            Event("ClientMessageEvent"), mClient(std::move(client)), mPacket(std::move(packet)) {}
 
     void Handle() override;
 private:
-    std::shared_ptr<game::network::Client> client;
-    std::shared_ptr<sf::Packet> packet;
+    std::shared_ptr<game::network::Client> mClient;
+    std::shared_ptr<sf::Packet> mPacket;
 };
 
 } // ns game::events

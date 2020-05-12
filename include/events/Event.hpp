@@ -12,13 +12,13 @@ namespace game::events {
 
 class Event {
 public:
-    explicit Event(std::string type) : type(std::move(type)) {}
+    explicit Event(std::string type) : mType(std::move(type)) {}
 
     virtual void Handle() = 0;
     [[nodiscard]] std::string GetType() const;
 
 private:
-    std::string type;
+    std::string mType;
 };
 
 } // ns game::events

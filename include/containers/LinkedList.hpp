@@ -18,7 +18,10 @@ namespace game::containers {
 template <typename T>
 class LinkedList {
 public:
-    LinkedList() : head(nullptr), tail(nullptr), size(0) {}
+    typedef Node<T> NodeType;
+    typedef size_t SizeType;
+
+    LinkedList() : mHead(nullptr), mTail(nullptr), mSize(0) {}
     ~LinkedList();
 
     [[nodiscard]] bool Empty() const;
@@ -26,14 +29,14 @@ public:
     void Print(std::ostream& out= std::cout) const;
 
     friend std::ostream& operator<<(std::ostream &out, const LinkedList &list) {
-        std::lock_guard<std::mutex> l(list.lock);
-        out << "size: " << list.size << std::endl;
+        std::lock_guard<std::mutex> l(list.mLock);
+        out << "size: " << list.mSize << std::endl;
         if (list.Empty()) {
             out << "<Empty>";
         } else {
-            for (Node<T>* curr = list.head; curr; curr = curr->next) {
-                out << curr->data;
-                if (curr->next) {
+            for (NodeType curr = list.mHead; curr; curr = curr->mNext) {
+                out << curr->mData;
+                if (curr->mNext) {
                     out << ", ";
                 }
             }
@@ -49,29 +52,29 @@ public:
 protected:
     void PushBack(T element);
     void PushFront(T element);
-    void Push(T element, Node<T>* &front, Node<T>* &back,
-              std::function<Node<T>**(Node<T>*)> next, std::function<Node<T>**(Node<T>*)> prev);
+    void Push(T element, NodeType* &front, NodeType* &back,
+              std::function<NodeType**(NodeType*)> next, std::function<NodeType**(NodeType*)> prev);
 
     std::optional<T> PopFront();
     std::optional<T> PopBack();
-    std::optional<T> Pop(Node<T>* &front, Node<T>* &back,
-            std::function<Node<T>**(Node<T>*)> next, std::function<Node<T>**(Node<T>*)> prev);
+    std::optional<T> Pop(NodeType* &front, NodeType* &back,
+            std::function<NodeType**(NodeType*)> next, std::function<NodeType**(NodeType*)> prev);
 
-    Node<T>* head;
-    Node<T>* tail;
-    size_t size;
+    NodeType* mHead;
+    NodeType* mTail;
+    SizeType mSize;
 
 private:
-    std::mutex lock;
+    std::mutex mLock;
 };
 
 template <typename T>
 LinkedList<T>::~LinkedList() {
-    std::lock_guard<std::mutex> l(this->lock);
-    Node<T>* curr = this->head;
-    Node<T>* next = curr;
+    std::lock_guard<std::mutex> l(this->mLock);
+    NodeType* curr = this->mHead;
+    NodeType* next = curr;
     while (curr) {
-        next = curr->next;
+        next = curr->mNext;
         delete curr;
         curr = next;
     }
@@ -79,29 +82,29 @@ LinkedList<T>::~LinkedList() {
 
 template <typename T>
 bool LinkedList<T>::Empty() const {
-    return this->size == 0;
+    return this->mSize == 0;
 }
 
 template <typename T>
 size_t LinkedList<T>::Size() const {
-    return this->size;
+    return this->mSize;
 }
 
 template <typename T>
 void LinkedList<T>::PushFront(T element) {
-    this->Push(element, this->head, this->tail, &Node<T>::Next, &Node<T>::Prev);
+    this->Push(element, this->mHead, this->mTail, &Node<T>::Next, &Node<T>::Prev);
 }
 
 template <typename T>
 void LinkedList<T>::PushBack(T element) {
-    return this->Push(element, this->tail, this->head, &Node<T>::Prev, &Node<T>::Next);
+    return this->Push(element, this->mTail, this->mHead, &Node<T>::Prev, &Node<T>::Next);
 }
 
 template <typename T>
-void LinkedList<T>::Push(T element, Node<T>* &front, Node<T>* &back,
-                         std::function<Node<T>**(Node<T>*)> next,
-                         std::function<Node<T>**(Node<T>*)> prev) {
-    std::lock_guard<std::mutex> l(this->lock);
+void LinkedList<T>::Push(T element, NodeType* &front, NodeType* &back,
+                         std::function<NodeType**(NodeType*)> next,
+                         std::function<NodeType**(NodeType*)> prev) {
+    std::lock_guard<std::mutex> l(this->mLock);
     auto node = new Node(element);
     if (this->Empty()) {
         front = node;
@@ -111,30 +114,30 @@ void LinkedList<T>::Push(T element, Node<T>* &front, Node<T>* &back,
         *next(node) = front;
         front = node;
     }
-    this->size++;
+    this->mSize++;
 }
 
 template <typename T>
 std::optional<T> LinkedList<T>::PopFront() {
-    return this->Pop(this->head, this->tail, &Node<T>::Next, &Node<T>::Prev);
+    return this->Pop(this->mHead, this->mTail, &Node<T>::Next, &Node<T>::Prev);
 }
 
 template <typename T>
 std::optional<T> LinkedList<T>::PopBack() {
-    return this->Pop(this->tail, this->head, &Node<T>::Prev, &Node<T>::Next);
+    return this->Pop(this->mTail, this->mHead, &Node<T>::Prev, &Node<T>::Next);
 }
 
 template<typename T>
-std::optional<T> LinkedList<T>::Pop(Node<T>* &front, Node<T>* &back,
-        std::function<Node<T>**(Node<T>*)> next, std::function<Node<T>**(Node<T>*)> prev) {
-    std::lock_guard<std::mutex> l(this->lock);
+std::optional<T> LinkedList<T>::Pop(NodeType* &front, NodeType* &back,
+        std::function<Node<T>**(NodeType*)> next, std::function<Node<T>**(NodeType*)> prev) {
+    std::lock_guard<std::mutex> l(this->mLock);
     if (this->Empty()) {
         return std::optional<T>();
     } else {
-        T data = front->data;
-        Node<T>* newHead = *next(front);
+        T data = front->mData;
+        NodeType* newHead = *next(front);
         delete front;
-        this->size--;
+        this->mSize--;
         if (this->Empty()) {
             front = nullptr;
             back = nullptr;

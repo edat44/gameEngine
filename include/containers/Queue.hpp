@@ -36,10 +36,6 @@ std::optional<T> Queue<T>::Dequeue() {
     return this->PopFront();
 }
 
-using event_t = std::variant<std::shared_ptr<events::Event>, std::shared_ptr<sf::Event>>;
-using eventRawQueue_t = Queue<event_t>;
-using eventQueue_t = std::shared_ptr<eventRawQueue_t>;
-
 } // ns game::containers
 
 #endif //GAME_QUEUE_HPP

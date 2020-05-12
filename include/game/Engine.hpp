@@ -17,14 +17,18 @@ namespace game {
 
 class Engine {
 public:
-    Engine() : running(false), tickTime(sf::seconds(1.0 / 1.0)),
-               events(std::make_shared<containers::eventRawQueue_t >()) {}
+    using EventType = std::variant<std::shared_ptr<events::Event>, std::shared_ptr<sf::Event>>;
+    using EventQueueRawType = game::containers::Queue<EventType>;
+    using EventQueueType = std::shared_ptr<EventQueueRawType>;
+
+    Engine() : mRunning(false), mTickTime(sf::seconds(1.0 / 1.0)),
+               mEvents(std::make_shared<EventQueueRawType>()) {}
 
     void Run();
 
     void Stop();
 
-    [[nodiscard]] containers::eventQueue_t Events() const;
+    [[nodiscard]] EventQueueType Events() const;
 
     void AddTickable(game::Tickable* tickable);
     void AddEvent(std::shared_ptr<game::events::Event>);
@@ -32,11 +36,11 @@ public:
 private:
     void Tick(sf::Time dt);
 
-    bool running;
-    sf::Time tickTime;
-    containers::eventQueue_t events;
-    sf::Clock clock;
-    containers::List<std::shared_ptr<game::Tickable>> tickables;
+    bool mRunning;
+    sf::Time mTickTime;
+    EventQueueType mEvents;
+    sf::Clock mClock;
+    containers::List<std::shared_ptr<game::Tickable>> mTickables;
 }; // class Engine
 
 } // ns game

@@ -29,9 +29,9 @@ private:
 
     std::shared_ptr<Client> AddClient(const std::shared_ptr<sf::TcpSocket> &socket);
 
-    std::unique_ptr<sf::TcpListener> listener;
-    game::containers::List<std::shared_ptr<Client>> clients;
-    std::shared_ptr<game::Engine> engine;
+    std::unique_ptr<sf::TcpListener> mListener;
+    game::containers::List<std::shared_ptr<Client>> mClients;
+    std::shared_ptr<game::Engine> mEngine;
 }; // class Server
 
 } // ns game::network

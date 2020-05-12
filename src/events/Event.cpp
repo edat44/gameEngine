@@ -7,7 +7,7 @@
 namespace game::events {
 
 std::string Event::GetType() const {
-    return this->type;
+    return this->mType;
 }
 
 } // ns game::events

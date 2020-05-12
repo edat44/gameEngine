@@ -11,15 +11,15 @@ namespace game {
 
 class Object {
 public:
-    Object() : active(false) {}
+    Object() : mActive(false) {}
 
 
-    void Activate() { this->active = true; };
-    void Deactivate() { this->active = false; }
-    [[nodiscard]] bool GetActive() const { return this->active; }
+    void Activate() { this->mActive = true; };
+    void Deactivate() { this->mActive = false; }
+    [[nodiscard]] bool Active() const { return this->mActive; }
 
 private:
-    bool active;
+    bool mActive;
 };
 
 } // ns game

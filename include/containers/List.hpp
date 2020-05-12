@@ -6,6 +6,7 @@
 #define GAME_LIST_HPP
 
 #include <containers/LinkedList.hpp>
+#include <containers/NodeForwardIterator.hpp>
 
 namespace game::containers {
 
@@ -14,7 +15,7 @@ class List : public LinkedList<T>{
 public:
     List() : LinkedList<T>() {}
     void Insert(T element);
-    NodeForwardIterator<T> begin() { return NodeForwardIterator<T>(this->head); }
+    NodeForwardIterator<T> begin() { return NodeForwardIterator<T>(this->mHead); }
     NodeForwardIterator<T> end() { return NodeForwardIterator<T>(nullptr); }
     NodeForwardIterator<T> erase(NodeForwardIterator<T> target);
 
@@ -32,13 +33,13 @@ NodeForwardIterator<T> List<T>::erase(NodeForwardIterator<T> target) {
         if (itr == target) {
             Node<T>* node = itr.GetNode();
             std::cout << "Found node to erase!" << std::endl;
-            if (node->prev) {
-                node->prev->next = node->next;
+            if (node->mPrev) {
+                node->mPrev->mNext = node->mNext;
             }
-            if (node->next) {
-                node->next->prev = node->prev;
+            if (node->mNext) {
+                node->mNext->mPrev = node->mPrev;
             }
-            auto toReturn = NodeForwardIterator<T>(node->next);
+            auto toReturn = NodeForwardIterator<T>(node->mNext);
             delete node;
             return toReturn;
         }
