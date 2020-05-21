@@ -25,8 +25,8 @@ namespace game::containers {
 template <typename T>
 class LinkedList {
 public:
-    typedef Node<T> NodeType;
-    typedef size_t SizeType;
+    using NodeType = Node<T>;
+    using SizeType = size_t;
 
 // LIFECYCLE
     LinkedList() : mHead(nullptr), mTail(nullptr), mSize(0) {}
@@ -67,7 +67,7 @@ public:
      *
      * @return The number of elements in the LinkedList
      */
-    [[nodiscard]] size_t Size() const;
+    [[nodiscard]] SizeType Size() const;
 
 
 
@@ -104,7 +104,7 @@ bool LinkedList<T>::Empty() const {
 }
 
 template <typename T>
-size_t LinkedList<T>::Size() const {
+typename LinkedList<T>::SizeType LinkedList<T>::Size() const {
     return mSize;
 }
 
